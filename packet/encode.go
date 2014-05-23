@@ -145,11 +145,18 @@ func encodeControlMessage(buf *bytes.Buffer, p interface{}) error {
 	return err
 }
 
+func encodeUnreliableMessage(buf *bytes.Buffer, p interface{}) error {
+	return nil
+}
+
 func Encode(buf *bytes.Buffer, p interface{}) error {
 	switch t := p.(type) {
 	default:
 		return fmt.Errorf("unrecognized packet type %s", t)
 	case *ConnectionRequestPacket, *ConnectionResponseAcceptPacket, *ConnectionResponseRejectPacket, *ServerInfoRequestPacket, *ServerInfoResponsePacket, *PlayerInfoRequestPacket, *PlayerInfoResponsePacket, *RuleInfoRequestPacket, *RuleInfoResponsePacket:
 		return encodeControlMessage(buf, p)
+	
+	case *UnreliableMessagePacket:
+		return encodeUnreliableMessage(buf, p)
 	}
 }
